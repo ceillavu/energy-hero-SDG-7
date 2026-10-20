@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Energy Hero - SDG 7</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Smartphone Mockup -->
+  <div class="phone-container">
+    <div class="phone-notch"></div>
+
+    <div class="screen-wrapper">
+
+      <!-- ================= 1. DASHBOARD SCREEN ================= -->
+      <section id="screen-dashboard" class="screen active">
+        <h1 class="app-title-shadow">ENERGY HERO</h1>
+        <p class="app-subtitle">Sustainable Energy Learning App</p>
+        <p class="welcome-text">Welcome, Explorer!</p>
+
+        <div class="module-cards">
+          <!-- Learning Module Card -->
+          <div class="card card-learn" onclick="renderLearningPage(0); showScreen('screen-learning');">
+            <div class="card-heading">LEARNING MODULE</div>
+            <div class="card-desc">Learn about SDG 7 and sustainable energy through interactive lessons.</div>
+            <div class="card-explore">→ EXPLORE</div>
+          </div>
+
+          <!-- Quiz Challenge Card -->
+          <div class="card card-quiz" onclick="showScreen('screen-lobby');">
+            <div class="card-heading">QUIZ CHALLENGE</div>
+            <div class="card-desc">Test your knowledge with quiz challenges at different difficulty levels.</div>
+            <div class="card-explore">→ EXPLORE</div>
+          </div>
+
+          <!-- Badges Card -->
+          <div class="card card-badge" onclick="renderLeaderboard(); showScreen('screen-badges');">
+            <div class="card-heading">BADGES & REWARDS</div>
+            <div class="card-desc">View your achievements, badges, star ratings, and leaderboard rankings.</div>
+            <div class="card-explore">→ EXPLORE</div>
+          </div>
+        </div>
+
+        <button class="btn btn-mute">🔊 Mute Audio</button>
+      </section>
+
+      <!-- ================= 2. LEARNING MODULE SCREEN ================= -->
+      <section id="screen-learning" class="screen">
+        <h2 id="learning-page-title" class="app-title-shadow" style="font-size:20px;">Energy Overview</h2>
+
+        <div class="learning-image-box">
+          <img id="learning-img" src="images/sdg7.jpeg" alt="Lesson Graphic">
+        </div>
+
+        <div id="learning-text" class="learning-content"></div>
+
+        <!-- Page 6 Comparison Table -->
+        <div id="learning-compare" class="compare-grid" style="display:none;">
+          <div class="compare-col compare-renew">
+            <strong>RENEWABLE ENERGY</strong><br><br>
+            <strong>ADVANTAGES:</strong><br>
+            • Sustainable<br>
+            • Naturally replenished<br>
+            • Low impact<br><br>
+            <strong>DISADVANTAGES:</strong><br>
+            • Weather dependent<br>
+            • High cost
+          </div>
+          <div class="compare-col compare-nonrenew">
+            <strong>NON-RENEWABLE</strong><br><br>
+            <strong>ADVANTAGES:</strong><br>
+            • High output<br>
+            • Reliable<br><br>
+            <strong>DISADVANTAGES:</strong><br>
+            • Pollution<br>
+            • Limited resources
+          </div>
+        </div>
+
+        <div class="nav-row" style="margin-bottom:10px;">
+          <button id="learning-prev-btn" class="btn btn-orange" onclick="renderLearningPage(state.learningIndex - 1);">Back</button>
+          <button id="learning-next-btn" class="btn btn-blue" onclick="renderLearningPage(state.learningIndex + 1);">Next</button>
+        </div>
+
+        <button class="btn btn-purple" onclick="showScreen('screen-dashboard');">Back to Dashboard</button>
+      </section>
+
+      <!-- ================= 3. QUIZ LOBBY SCREEN ================= -->
+      <section id="screen-lobby" class="screen">
+        <h2 class="app-title-shadow" style="font-size:22px;">QUIZ LOBBY</h2>
+        <p class="app-subtitle" style="margin-bottom:16px;">Test your SDG 7 knowledge</p>
+
+        <div class="input-group">
+          <label class="input-label" for="player-name-input">Enter Your Name:</label>
+          <input type="text" id="player-name-input" class="text-input" placeholder="e.g. John Doe" maxlength="20">
+        </div>
+
+        <label class="input-label">Select Difficulty:</label>
+        <div class="diff-buttons">
+          <button class="diff-btn easy selected" data-diff="easy">Easy (20 Questions)</button>
+          <button class="diff-btn medium" data-diff="medium">Medium (20 Questions)</button>
+          <button class="diff-btn hard" data-diff="hard">Hard (20 Questions)</button>
+        </div>
+
+        <button class="btn btn-blue" style="margin-bottom:10px;" onclick="startQuiz();">Start Quiz</button>
+        <button class="btn btn-purple" style="margin-bottom:10px;" onclick="renderLeaderboard(); showScreen('screen-badges');">View Leaderboard</button>
+        <button class="btn btn-red" onclick="showScreen('screen-dashboard');">Back to Dashboard</button>
+      </section>
+
+      <!-- ================= 4. QUIZ ENGINE SCREEN ================= -->
+      <section id="screen-quiz" class="screen">
+        <div class="quiz-header">
+          <span id="quiz-progress">Q 1 / 20</span>
+          <span id="quiz-timer" style="color:var(--primary-red);">Time: 20</span>
+        </div>
+
+        <div class="progress-track">
+          <div id="quiz-progress-bar" class="progress-fill"></div>
+        </div>
+
+        <div id="quiz-question-text" class="question-box">Loading question...</div>
+        <div id="quiz-feedback" class="feedback-badge"></div>
+
+        <div id="quiz-options" class="options-grid"></div>
+
+        <div class="nav-row" style="margin-top:auto;">
+          <button id="quiz-prev-btn" class="btn btn-orange" onclick="prevQuestion();">Back</button>
+          <button id="quiz-next-btn" class="btn btn-blue" onclick="nextQuestion();">Next</button>
+        </div>
+      </section>
+
+      <!-- ================= 5. RESULT SCREEN ================= -->
+      <section id="screen-result" class="screen">
+        <h2 class="app-title-shadow" style="font-size:22px;">QUIZ RESULT</h2>
+        <h3 id="result-title" style="text-align:center; font-size:24px; font-weight:800; margin:10px 0;">Outstanding!</h3>
+
+        <div id="result-card" class="result-card">
+          <div id="result-score" style="font-size:16px; font-weight:800;">Final Score: 20 / 20 (100%)</div>
+          <div id="result-stars" class="stars-row"></div>
+          <div id="result-badge" class="result-badge-title">Gold Energy Hero</div>
+          <div id="result-level" class="result-level-title">Level 5 - SDG Champion</div>
+          <div id="result-motivation" class="result-motivation"></div>
+        </div>
+
+        <p id="result-quote" class="result-quote"></p>
+
+        <button class="btn btn-purple" style="margin-bottom:10px;" onclick="renderLeaderboard(); showScreen('screen-badges');">View Badges & Rankings</button>
+        <button class="btn btn-green" onclick="showScreen('screen-dashboard');">Back to Dashboard</button>
+      </section>
+
+      <!-- ================= 6. BADGES & LEADERBOARD SCREEN ================= -->
+      <section id="screen-badges" class="screen">
+        <h2 class="app-title-shadow" style="font-size:20px;">ACHIEVEMENTS</h2>
+
+        <div class="tab-row">
+          <button class="tab-btn active" data-tab="badges">Badges</button>
+          <button class="tab-btn" data-tab="leaderboard">Leaderboard</button>
+        </div>
+
+        <!-- Badges list -->
+        <div id="badges-records-list" class="records-scroll"></div>
+
+        <!-- Leaderboard Table -->
+        <div id="leaderboard-table-container" class="table-wrapper" style="display:none;">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Score</th>
+                <th>Diff</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-table-body"></tbody>
+          </table>
+        </div>
+
+        <div class="nav-row" style="margin-bottom:10px;">
+          <button class="btn btn-orange" onclick="clearLeaderboard();">Clear All</button>
+          <button class="btn btn-blue" onclick="showScreen('screen-lobby');">Play Again</button>
+        </div>
+
+        <button class="btn btn-red" onclick="showScreen('screen-dashboard');">Back to Dashboard</button>
+      </section>
+
+    </div>
+
+    <div class="phone-home-bar"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

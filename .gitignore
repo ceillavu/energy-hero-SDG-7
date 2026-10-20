@@ -1,0 +1,21 @@
+# Local Runtime Data & Binaries
+bin/
+*.class
+*.jar
+*.zip
+*.pdf
+leaderboard.dat
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor caches
+.idea/
+*.iml
+.settings/
+.project
+.classpath
+*.swp
+*.swo
